@@ -5,13 +5,14 @@ import json
 
 
 @frappe.whitelist()
-def get_ignite_services_to_invoice(patient, company):
+def get_ignite_services_to_invoice(patient, company, encounter):
     patient = frappe.get_doc("Patient", patient)
+    encounter = frappe.get_doc("Patient Encounter", encounter)
     items_to_invoice = []
     if patient:
         validate_customer_created(patient)
         # Customer validated, build a list of billable services
-        items_to_invoice += get_tasks_to_invoice(patient, company)
+        items_to_invoice += get_tasks_to_invoice(patient, company, encounter)
         return items_to_invoice
 
 
@@ -22,14 +23,14 @@ def validate_customer_created(patient):
         frappe.throw(msg, title=_("Customer Not Found"))
 
 
-def get_tasks_to_invoice(patient, company):
+def get_tasks_to_invoice(patient, company, encounter):
     tasks_to_invoice = []
     ignite_url = frappe.local.conf.ignite_get_tasks_url
     mb_tasks = []
     try:
-        ignite_url = ignite_url + "/" + patient.name
         headers = {"Content-Type": "application/json"}
-        res = requests.get(ignite_url, headers=headers)
+        data = {"patient": patient.name, "encounter": encounter.name}
+        res = requests.post(ignite_url, headers=headers, data=json.dumps(data))
         mb_tasks = res.json()
     except Exception as e:
         msg = _("Error getting Medblocks task")

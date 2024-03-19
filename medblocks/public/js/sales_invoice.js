@@ -1,4 +1,4 @@
-// Healthcare
+// Medblocks
 frappe.ui.form.on("Sales Invoice", {
   refresh(frm) {
     if (frm.doc.docstatus === 0 && !frm.doc.is_return) {
@@ -62,6 +62,7 @@ var set_service_unit = function (frm) {
 var get_ignite_services_to_invoice = function (frm) {
   var me = this;
   let selected_patient = "";
+  let selected_encounter = "";
   var dialog = new frappe.ui.Dialog({
     title: __("Get Items from Ignite Services"),
     fields: [
@@ -72,6 +73,22 @@ var get_ignite_services_to_invoice = function (frm) {
         fieldname: "patient",
         reqd: true,
       },
+      {
+        fieldtype: "Link",
+        options: "Patient Encounter",
+        label: "Patient Encounter",
+        fieldname: "encounter",
+        reqd: true,
+        get_query: function (doc) {
+          return {
+            filters: {
+              patient: dialog.get_value("patient"),
+              company: frm.doc.company,
+              docstatus: 1,
+            },
+          };
+        },
+      },
       { fieldtype: "Section Break" },
       { fieldtype: "HTML", fieldname: "results_area" },
     ],
@@ -81,13 +98,16 @@ var get_ignite_services_to_invoice = function (frm) {
   var $placeholder;
   dialog.set_values({
     patient: frm.doc.patient,
+    encounter: "",
   });
-  dialog.fields_dict["patient"].df.onchange = () => {
+  dialog.fields_dict["encounter"].df.onchange = () => {
     var patient = dialog.fields_dict.patient.input.value;
-    if (patient && patient != selected_patient) {
+    var encounter = dialog.fields_dict.encounter.input.value;
+    if (encounter && encounter!=selected_encounter) {
       selected_patient = patient;
+      selected_encounter = encounter;
       var method = "medblocks.medblocks.utils.get_ignite_services_to_invoice";
-      var args = { patient: patient, company: frm.doc.company };
+      var args = { patient: patient, company: frm.doc.company, encounter: encounter };
       var columns = ["service", "reference_type", "rate"];
       get_ignite_items(
         frm,
@@ -98,8 +118,8 @@ var get_ignite_services_to_invoice = function (frm) {
         args,
         columns
       );
-    } else if (!patient) {
-      selected_patient = "";
+    } else if (!encounter) {
+      selected_encounter = "";
       $results.empty();
       $results.append($placeholder);
     }
@@ -267,15 +287,15 @@ var list_row_data_items = function (
 var add_to_item_line = function (frm, checked_values, invoice_ignite_services) {
   if (invoice_ignite_services) {
     frappe.call({
-    	doc: frm.doc,
-    	method: "set_medblocks_services",
-    	args:{
-    		checked_values: checked_values
-    	},
-    	callback: function() {
-    		frm.trigger("validate");
-    		frm.refresh_fields();
-    	}
+      doc: frm.doc,
+      method: "set_medblocks_services",
+      args: {
+        checked_values: checked_values,
+      },
+      callback: function () {
+        frm.trigger("validate");
+        frm.refresh_fields();
+      },
     });
     // for (let i = 0; i < checked_values.length; i++) {
     //   var si_item = frappe.model.add_child(
@@ -302,7 +322,7 @@ var add_to_item_line = function (frm, checked_values, invoice_ignite_services) {
     //     "reference_dt",
     //     checked_values[i]["dt"]
     //   );
-		// console.log(checked_values[i]["rate"]);
+    // console.log(checked_values[i]["rate"]);
     //   frappe.model.set_value(
     //     si_item.doctype,
     //     si_item.name,
