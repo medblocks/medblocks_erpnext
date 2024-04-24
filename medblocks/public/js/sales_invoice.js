@@ -3,9 +3,9 @@ frappe.ui.form.on("Sales Invoice", {
   refresh(frm) {
     if (frm.doc.docstatus === 0 && !frm.doc.is_return) {
       frm.add_custom_button(
-        __("Ignite Services"),
+        __("Medblocks Services"),
         function () {
-          get_ignite_services_to_invoice(frm);
+          get_medblocks_services_to_invoice(frm);
         },
         __("Get Items From")
       );
@@ -59,12 +59,12 @@ var set_service_unit = function (frm) {
   }
 };
 
-var get_ignite_services_to_invoice = function (frm) {
+var get_medblocks_services_to_invoice = function (frm) {
   var me = this;
   let selected_patient = "";
   let selected_encounter = "";
   var dialog = new frappe.ui.Dialog({
-    title: __("Get Items from Ignite Services"),
+    title: __("Get Items from Medblocks Services"),
     fields: [
       {
         fieldtype: "Link",
@@ -72,22 +72,6 @@ var get_ignite_services_to_invoice = function (frm) {
         label: "Patient",
         fieldname: "patient",
         reqd: true,
-      },
-      {
-        fieldtype: "Link",
-        options: "Patient Encounter",
-        label: "Patient Encounter",
-        fieldname: "encounter",
-        reqd: true,
-        get_query: function (doc) {
-          return {
-            filters: {
-              patient: dialog.get_value("patient"),
-              company: frm.doc.company,
-              docstatus: 1,
-            },
-          };
-        },
       },
       { fieldtype: "Section Break" },
       { fieldtype: "HTML", fieldname: "results_area" },
@@ -100,16 +84,20 @@ var get_ignite_services_to_invoice = function (frm) {
     patient: frm.doc.patient,
     encounter: "",
   });
-  dialog.fields_dict["encounter"].df.onchange = () => {
+  dialog.fields_dict["patient"].df.onchange = () => {
     var patient = dialog.fields_dict.patient.input.value;
-    var encounter = dialog.fields_dict.encounter.input.value;
-    if (encounter && encounter!=selected_encounter) {
+    var encounter = "";
+    if (patient && patient != selected_patient) {
       selected_patient = patient;
       selected_encounter = encounter;
-      var method = "medblocks.medblocks.utils.get_ignite_services_to_invoice";
-      var args = { patient: patient, company: frm.doc.company, encounter: encounter };
-      var columns = ["service", "reference_type", "rate"];
-      get_ignite_items(
+      var method = "medblocks.medblocks.utils.get_medblocks_services_to_invoice";
+      var args = {
+        patient: patient,
+        company: frm.doc.company,
+        encounter: encounter,
+      };
+      var columns = ["service", "reference_type", "rate", "quantity"];
+      get_MB_items(
         frm,
         true,
         $results,
@@ -118,8 +106,8 @@ var get_ignite_services_to_invoice = function (frm) {
         args,
         columns
       );
-    } else if (!encounter) {
-      selected_encounter = "";
+    } else if (!patient) {
+      selected_patient = "";
       $results.empty();
       $results.append($placeholder);
     }
@@ -130,8 +118,7 @@ var get_ignite_services_to_invoice = function (frm) {
   $results = $wrapper.find(".results");
   $placeholder = $(`<div class="multiselect-empty-state">
 				<span class="text-center" style="margin-top: -40px;">
-					<i class="fa fa-2x fa-heartbeat text-extra-muted"></i>
-					<p class="text-extra-muted">No billable Ignite Services found</p>
+					<p class="text-extra-muted">No billable Medblocks Services found</p>
 				</span>
 			</div>`);
   $results.on("click", ".list-item--head :checkbox", (e) => {
@@ -143,9 +130,9 @@ var get_ignite_services_to_invoice = function (frm) {
   dialog.show();
 };
 
-var get_ignite_items = function (
+var get_MB_items = function (
   frm,
-  invoice_ignite_services,
+  invoice_MB_services,
   $results,
   $placeholder,
   method,
@@ -159,10 +146,10 @@ var get_ignite_items = function (
     args: args,
     callback: function (data) {
       if (data.message) {
-        $results.append(make_list_row(columns, invoice_ignite_services));
+        $results.append(make_list_row(columns, invoice_MB_services));
         for (let i = 0; i < data.message.length; i++) {
           $results.append(
-            make_list_row(columns, invoice_ignite_services, data.message[i])
+            make_list_row(columns, invoice_MB_services, data.message[i])
           );
         }
       } else {
@@ -172,7 +159,7 @@ var get_ignite_items = function (
   });
 };
 
-var make_list_row = function (columns, invoice_ignite_services, result = {}) {
+var make_list_row = function (columns, invoice_MB_services, result = {}) {
   var me = this;
   // Make a head row by default (if result not passed)
   let head = Object.keys(result).length === 0;
@@ -199,7 +186,7 @@ var make_list_row = function (columns, invoice_ignite_services, result = {}) {
 		${contents}
 	</div>`);
 
-  $row = list_row_data_items(head, $row, result, invoice_ignite_services);
+  $row = list_row_data_items(head, $row, result, invoice_MB_services);
   return $row;
 };
 
@@ -207,21 +194,21 @@ var set_primary_action = function (
   frm,
   dialog,
   $results,
-  invoice_ignite_services
+  invoice_MB_services
 ) {
   var me = this;
   dialog.set_primary_action(__("Add"), function () {
     frm.clear_table("items");
     let checked_values = get_checked_values($results);
     if (checked_values.length > 0) {
-      if (invoice_ignite_services) {
+      if (invoice_MB_services) {
         frm.set_value("patient", dialog.fields_dict.patient.input.value);
       }
-      add_to_item_line(frm, checked_values, invoice_ignite_services);
+      add_to_item_line(frm, checked_values, invoice_MB_services);
       dialog.hide();
     } else {
-      if (invoice_ignite_services) {
-        frappe.msgprint(__("Please select Ignite Service"));
+      if (invoice_MB_services) {
+        frappe.msgprint(__("Please select Medblocks Service"));
       }
     }
   });
@@ -268,9 +255,9 @@ var list_row_data_items = function (
   head,
   $row,
   result,
-  invoice_ignite_services
+  invoice_MB_services
 ) {
-  if (invoice_ignite_services) {
+  if (invoice_MB_services) {
     head
       ? $row.addClass("list-item--head")
       : ($row = $(`<div class="list-item-container"
@@ -284,8 +271,8 @@ var list_row_data_items = function (
   return $row;
 };
 
-var add_to_item_line = function (frm, checked_values, invoice_ignite_services) {
-  if (invoice_ignite_services) {
+var add_to_item_line = function (frm, checked_values, invoice_MB_services) {
+  if (invoice_MB_services) {
     frappe.call({
       doc: frm.doc,
       method: "set_medblocks_services",

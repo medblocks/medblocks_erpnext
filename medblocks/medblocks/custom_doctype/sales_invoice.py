@@ -35,8 +35,8 @@ class MedblocksSalesInvoice(SalesInvoice):
 			item_line.amount = float(item_line.rate) * float(item_line.qty)
 			if checked_item["income_account"]:
 				item_line.income_account = checked_item["income_account"]
-			# if checked_item["dt"]:
-			# 	item_line.reference_dt = checked_item["dt"]
+			if checked_item["dt"]:
+				item_line.item_name = checked_item["dt"]
 			# if checked_item["dn"]:
 			# 	item_line.reference_dn = checked_item["dn"]
 			if checked_item["description"]:
