@@ -76,7 +76,7 @@ def get_tasks_to_invoice(patient, company, encounter):
             Item.is_fixed_asset = 0
             Item.auto_create_assets = 0
             Item.is_grouped_asset = 0
-            Item.flags.ignore_manadatory = True
+            Item.flags.ignore_mandatory = True
             Item.flags.ignore_permissions = True
             Item.insert()
             Item.save()
@@ -84,7 +84,7 @@ def get_tasks_to_invoice(patient, company, encounter):
             ItemPrice.item_code = task["item_code"]
             ItemPrice.price_list = "Standard Selling"
             ItemPrice.price_list_rate = 0.0
-            ItemPrice.flags.ignore_manadatory = True
+            ItemPrice.flags.ignore_mandatory = True
             ItemPrice.flags.ignore_permissions = True
             ItemPrice.insert()
             ItemPrice.save()
