@@ -1,7 +1,7 @@
 ## Medblocks
 
-Module to create tasks.
+Aarthy Medblocks-ErpNext integration
 
 #### License
 
-MIT
+mit

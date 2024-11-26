@@ -1,9 +1,9 @@
 [project]
 name = "medblocks"
 authors = [
-    { name = "Abhinand", email = "abhinand@medblocks.org"}
+    { name = "Medblocks", email = "team@medblocks.org"}
 ]
-description = "Module to create tasks."
+description = "Aarthy Medblocks-ErpNext integration"
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]

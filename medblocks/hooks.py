@@ -1,16 +1,32 @@
 app_name = "medblocks"
 app_title = "Medblocks"
-app_publisher = "Abhinand"
-app_description = "Module to create tasks."
-app_email = "abhinand@medblocks.org"
-app_license = "MIT"
-required_apps = ["healthcare"]
+app_publisher = "Medblocks"
+app_description = "Aarthy Medblocks-ErpNext integration"
+app_email = "team@medblocks.org"
+app_license = "mit"
+
+# Apps
+# ------------------
+
+required_apps = ["erpnext"]
+# Each item in the list will be shown as an app in the apps page
+# add_to_apps_screen = [
+# 	{
+# 		"name": "medblocks",
+# 		"logo": "/assets/medblocks/logo.png",
+# 		"title": "Medblocks",
+# 		"route": "/medblocks",
+# 		"has_permission": "medblocks.api.permission.has_app_permission"
+# 	}
+# ]
+
 # Includes in <head>
 # ------------------
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/medblocks/css/medblocks.css"
 # app_include_js = "/assets/medblocks/js/medblocks.js"
+
 # include js, css files in header of web template
 # web_include_css = "/assets/medblocks/css/medblocks.css"
 # web_include_js = "/assets/medblocks/js/medblocks.js"
@@ -26,11 +42,15 @@ required_apps = ["healthcare"]
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+
+# Svg Icons
+# ------------------
+# include app icons in desk
+# app_include_icons = "medblocks/public/icons.svg"
 
 # Home Pages
 # ----------
@@ -61,14 +81,14 @@ doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
 # Installation
 # ------------
 
-before_install = "medblocks.setup.setup_Medblocks"
-# after_install = "medblocks.install.after_install"
+# before_install = "medblocks.install.before_install"
+after_install = "medblocks.install.after_install"
 
 # Uninstallation
 # ------------
 
 # before_uninstall = "medblocks.uninstall.before_uninstall"
-# after_uninstall = "medblocks.uninstall.after_uninstall"
+after_uninstall = "medblocks.uninstall.after_uninstall"
 
 # Integration Setup
 # ------------------
@@ -111,20 +131,11 @@ before_install = "medblocks.setup.setup_Medblocks"
 # override_doctype_class = {
 # 	"ToDo": "custom_app.overrides.CustomToDo"
 # }
-override_doctype_class = {
-	"Sales Invoice": "medblocks.medblocks.custom_doctype.sales_invoice.MedblocksSalesInvoice",
-}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#    "Sales Invoice": {
-# 		"on_submit": "medblocks.medblocks.utils.manage_invoice_submit_cancel",
-# 		"on_cancel": "medblocks.medblocks.utils.manage_invoice_submit_cancel",
-# 	}
-# }
 # doc_events = {
 # 	"*": {
 # 		"on_update": "method",
@@ -222,3 +233,11 @@ override_doctype_class = {
 # auth_hooks = [
 # 	"medblocks.auth.validate"
 # ]
+
+# Automatically update python controller files with type annotations for this app.
+# export_python_type_annotations = True
+
+# default_log_clearing_doctypes = {
+# 	"Logging DocType Name": 30  # days to retain logs
+# }
+
