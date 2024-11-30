@@ -29,14 +29,16 @@ def create_fhir_customer():
     gender = gender_hashmap.get(data.get("gender"))
     mobile_no, email_id = get_telecom(data.get("telecom"))
     primary_address = get_address(data.get("address"))
+    primary_identifier = get_primary_identifier(data.get("identifier"))
     customer_data = {
-          "fhir_id": fhir_id,  # Custom name
+          "fhir_id": fhir_id, 
           "customer_name" : customer_name,
           "customer_type": "Individual",
           "mobile_no" : mobile_no,
           "email_id" : email_id,
           "gender": gender,
           "primary_address": primary_address
+          **({"customer_uid": primary_identifier} if primary_identifier != None else {} )
        }
     status, data = upsert_customer(fhir_id, customer_data)
     
@@ -88,6 +90,14 @@ def get_telecom(telecoms):
             break
     return phone, email
 
+def get_primary_identifier(identifiers):
+    primary_identifier = None
+    if not identifiers or not isinstance(identifiers, list):
+        return primary_identifier
+    primary_identifier = next(
+    (item.get("value") for item in data if item.get("system") == frappe.local.conf.ignite_get_tasks_url),
+    None
+)
 
 def get_address(addresses):
     address_text = None

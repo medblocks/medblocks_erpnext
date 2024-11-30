@@ -4,7 +4,7 @@ import frappe
 
 def after_install():
     try:
-        custom_field = frappe.get_doc(
+        custom_fhir_field = frappe.get_doc(
             {
                 "doctype": "Custom Field",
                 "dt": "Customer",
@@ -15,8 +15,21 @@ def after_install():
                 "label": "Fhir Id",
             }
         )
-        custom_field.insert(ignore_permissions=True)
-        custom_field.submit()
+        custom_fhir_field.insert(ignore_permissions=True)
+        custom_fhir_field.submit()
+        custom_uid_field = frappe.get_doc(
+            {
+                "doctype": "Custom Field",
+                "dt": "Customer",
+                "fieldname": "customer_uid",
+                "fieldtype": "Data",
+                "hidden": 0,
+                "name": "customer_uid",
+                "label": "Customer Uid",
+            }
+        )
+        custom_uid_field.insert(ignore_permissions=True)
+        custom_uid_field.submit()
         frappe.clear_cache(doctype="Customer")
     except Exception as e:
         click.secho(
