@@ -7,7 +7,7 @@ app_license = "mit"
 
 # Apps
 # ------------------
-
+# fixtures = ["Custom Field"]
 required_apps = ["erpnext"]
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -42,6 +42,10 @@ required_apps = ["erpnext"]
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
+doctype_js = {
+    "Payment Entry": "public/js/payment_entry.js",
+    "Payment Request": "public/js/payment_request.js"
+}
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -81,8 +85,8 @@ required_apps = ["erpnext"]
 # Installation
 # ------------
 
-# before_install = "medblocks.install.before_install"
-after_install = "medblocks.install.after_install"
+before_install = "medblocks.install.before_install"
+# after_install = "medblocks.install.after_install"
 
 # Uninstallation
 # ------------
