@@ -80,26 +80,25 @@ def insert_custom_field(custom_field_data):
 def add_custom_docs(doc_type, custom_doc_data):
     try:
         existing_custom_doc = frappe.db.exists(
-                doc_type,
                 custom_doc_data
             )
         if not existing_custom_doc:
-            custom_doc = frappe.new_doc("Opportunity Type")
+            custom_doc = frappe.new_doc(doc_type)
             custom_doc.update(custom_doc_data)
             custom_doc.insert()
             frappe.db.commit()
-            click.secho(f"Added custom field `{doc_type}`.`{custom_doc_data.get('name')}`.", fg="white")
+            click.secho(f"Added custom doc `{doc_type}`.`{custom_doc_data.get('name')}`.", fg="white")
         else:
             click.secho(
                 (
-                    f"Custom field `{doc_type}`.`{custom_doc_data.get('name')}` exists. "
+                    f"Custom Doc `{doc_type}`.`{custom_doc_data.get('name')}` exists. "
                     "Skipping creation."
                 ),
                 fg="yellow",
             )
     except Exception as e:
         click.secho(
-            (f"Error inserting Custom Field: `{doc_type}`.`{custom_doc_data.get('name')}`."),
+            (f"Error inserting Custom Doc: `{doc_type}`.`{custom_doc_data.get('name')}`."),
             fg="bright_red",
         )
         raise e

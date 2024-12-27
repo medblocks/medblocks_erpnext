@@ -121,6 +121,7 @@ OPPORTUNITY_CUSTOM_FIELD_LIST = [
                 "label": "Screening Purpose",
                 "fieldtype": "Data",
                 "insert_after": "medblocks_section_break",
+                "in_list_view": 1,
             },
             {
                 "fieldname": "patient_occupation",

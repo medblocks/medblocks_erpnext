@@ -13,10 +13,11 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.KanbanView {
         const currentDateObj = new Date(currentDate);
         const followUpDateObj = new Date(follow_up_date);
         const timeDifference = followUpDateObj - currentDateObj;
+        user_tags = user_tags?user_tags:",";
         if (currentDate >= follow_up_date)
-          user_tags = ",Follow up: Due" + user_tags;
+          user_tags = ",Follow up: Due" + user_tags||"";
         else if (timeDifference > 0 && timeDifference <= 24 * 60 * 60 * 1000)
-          user_tags = ",Follow up: Today" + user_tags;
+          user_tags = ",Follow up: Today" + user_tags||"";
         item._user_tags = user_tags;
         return item;
       });
