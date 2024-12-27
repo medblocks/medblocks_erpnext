@@ -2,6 +2,7 @@ import click
 import frappe
 from medblocks.custom_fields import MEDBLOCKS_CUSTOM_FIELDS
 from medblocks.custom_searches import MEDBLOCKS_CUSTOM_SEARCHES
+from medblocks.custom_docs import MEDBLOCKS_CUSTOM_DOCS
 
 def before_install():
     try:
@@ -12,6 +13,10 @@ def before_install():
             frappe.clear_cache(doctype=doc_type)
         for doc_type, custom_searches in MEDBLOCKS_CUSTOM_SEARCHES:
             add_custom_search_fields(doc_type, custom_searches)
+            frappe.clear_cache(doctype=doc_type)
+        for doc_type, custom_docs in MEDBLOCKS_CUSTOM_DOCS:
+            for custom_doc in custom_docs:
+                add_custom_docs(doc_type, custom_doc)
             frappe.clear_cache(doctype=doc_type)
     except Exception as e:
         click.secho(
@@ -53,9 +58,9 @@ def insert_custom_field(custom_field_data):
             },
         )
         if not existing_custom_field:
-            customer_doc = frappe.new_doc("Custom Field")
-            customer_doc.update(custom_field_data)
-            customer_doc.insert()
+            custom_field = frappe.new_doc("Custom Field")
+            custom_field.update(custom_field_data)
+            custom_field.insert()
             frappe.db.commit()
             click.secho(f"Added custom field `{custom_field_data.get('dt')}`.`{custom_field_data.get('fieldname')}`.", fg="white")
         else:
@@ -72,3 +77,30 @@ def insert_custom_field(custom_field_data):
             fg="bright_red",
         )
         raise e
+def add_custom_docs(doc_type, custom_doc_data):
+    try:
+        existing_custom_doc = frappe.db.exists(
+                doc_type,
+                custom_doc_data
+            )
+        if not existing_custom_doc:
+            custom_doc = frappe.new_doc("Opportunity Type")
+            custom_doc.update(custom_doc_data)
+            custom_doc.insert()
+            frappe.db.commit()
+            click.secho(f"Added custom field `{doc_type}`.`{custom_doc_data.get('name')}`.", fg="white")
+        else:
+            click.secho(
+                (
+                    f"Custom field `{doc_type}`.`{custom_doc_data.get('name')}` exists. "
+                    "Skipping creation."
+                ),
+                fg="yellow",
+            )
+    except Exception as e:
+        click.secho(
+            (f"Error inserting Custom Field: `{doc_type}`.`{custom_doc_data.get('name')}`."),
+            fg="bright_red",
+        )
+        raise e
+    

@@ -1,8 +1,6 @@
 import frappe
 import json
 from frappe.utils.response import build_response
-from erpnext.selling.doctype.customer.customer import Customer
-import frappe.model.rename_doc as rd
 import re
 
 phone_number_pattern = r'^\+?(\d{1,14}(-\d{1,14})*)$'

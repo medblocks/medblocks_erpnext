@@ -102,6 +102,82 @@ PAYMENT_REQUEST_CUSTOM_FIELD_LIST = [
     }
 ]
 
+OPPORTUNITY_CUSTOM_FIELD_LIST = [
+            {
+                "fieldname": "mrd_no",
+                "label": "MRD No",
+                "fieldtype": "Data",
+                "depends_on": "eval:doc.opportunity_from=='Customer' && doc.party_name",
+        "insert_after": "party_name",
+                "in_list_view": 1,
+                "in_filter": 1,
+                "allow_in_quick_entry": 1,
+                "in_standard_filter": 1,
+                "in_global_search": 1,
+            },
+            {**medblocks_section_break, "insert_after": "probability"},
+            {
+                "fieldname": "screening_purpose",
+                "label": "Screening Purpose",
+                "fieldtype": "Data",
+                "insert_after": "medblocks_section_break",
+            },
+            {
+                "fieldname": "patient_occupation",
+                "label": "Patient Occupation",
+                "fieldtype": "Data",
+                 "insert_after": "screening_purpose",
+            },
+            {
+                "fieldname": "opportunity_source",
+                "label": "How did patient know us ?",
+                "fieldtype": "Link",
+                "options": "Lead Source",
+                 "insert_after": "patient_occupation",
+            },
+            {
+                "fieldname": "patient_opinion",
+                "label": "Patient Opinion",
+                "fieldtype": "Data",
+                 "insert_after": "opportunity_source",
+            },
+            { "fieldname": "medblocks_column_break_1",
+                "insert_after": "patient_opinion",
+                "fieldtype": "Column Break",
+            },
+            {
+                "fieldname": "tpa_status",
+                "label": "TPA Status",
+                "fieldtype": "Data",
+                 "insert_after": "medblocks_column_break_1",
+            },
+            {
+                "fieldname": "patient_education",
+                "label": "Patient Education",
+                "fieldtype": "Data",
+                 "insert_after": "tpa_status",
+            },
+            {
+                "fieldname": "surgery_type",
+                "label": "Surgery Type",
+                "fieldtype": "Link",
+                "options": "Item",
+                 "in_list_view": 1,
+                "in_filter": 1,
+                "in_standard_filter": 1,
+                 "insert_after": "patient_education",
+            },
+            {
+                "fieldname": "follow_up_date",
+                "label": "Follow Up Date",
+                "fieldtype": "Date",
+                "in_list_view": 1,
+                "in_filter": 1,
+                "in_standard_filter": 1,
+                 "insert_after": "surgery_type",
+            }
+]
+
 
 def generate_custom_field_tuple(dt, custom_list):
     return (dt, list(map(lambda x, doctype=dt: {**x, "dt": doctype}, custom_list)))
@@ -115,4 +191,5 @@ MEDBLOCKS_CUSTOM_FIELDS = [
     generate_custom_field_tuple("Sales Invoice", SALES_INVOICE_CUSTOM_FIELD_LIST),
     generate_custom_field_tuple("Payment Entry", PAYMENT_ENTRY_CUSTOM_FIELD_LIST),
     generate_custom_field_tuple("Payment Request", PAYMENT_REQUEST_CUSTOM_FIELD_LIST),
+    generate_custom_field_tuple("Opportunity", OPPORTUNITY_CUSTOM_FIELD_LIST),
 ]

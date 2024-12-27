@@ -24,15 +24,15 @@ required_apps = ["erpnext"]
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/medblocks/css/medblocks.css"
-# app_include_js = "/assets/medblocks/js/medblocks.js"
+# app_include_css = "/public/css/opportunity-kanban.css"
+app_include_js = "medblocks.bundle.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/medblocks/css/medblocks.css"
 # web_include_js = "/assets/medblocks/js/medblocks.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "medblocks/public/scss/website"
+# website_theme_scss = "medblocks/public/scss/website" 
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -44,10 +44,12 @@ required_apps = ["erpnext"]
 # include js in doctype views
 doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
-    "Payment Request": "public/js/payment_request.js"
+    "Payment Request": "public/js/payment_request.js",
+    "Opportunity": "public/js/opportunity.js",
+    "Customer": "public/js/customer.js"
 }
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_list_js = {"Opportunity" : "public/js/opportunity_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
