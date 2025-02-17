@@ -147,10 +147,12 @@ OPPORTUNITY_CUSTOM_FIELD_LIST = [
                 "fieldtype": "Column Break",
             },
             {
-                "fieldname": "tpa_status",
-                "label": "TPA Status",
-                "fieldtype": "Data",
+                "fieldname": "payor",
+                "label": "Payor",
+                "fieldtype": "Select",
                  "insert_after": "medblocks_column_break_1",
+                 "options": "\nSelf Pay\nPrivate Insurance\nGovernment insurance",
+                 "default": "Self Pay"
             },
             {
                 "fieldname": "patient_education",
