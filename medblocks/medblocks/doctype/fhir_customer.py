@@ -1,6 +1,9 @@
 import frappe
 import json
 from frappe.utils.response import build_response
+from frappe.utils import getdate
+# from types import dict, str
+from dateutil.relativedelta import relativedelta
 import re
 
 phone_number_pattern = r'^\+?(\d{1,14}(-\d{1,14})*)$'
@@ -29,6 +32,8 @@ def create_fhir_customer():
     mobile_nos, email_ids = get_telecom(data.get("telecom"))
     primary_address = get_address(data.get("address"))
     primary_identifier = get_primary_identifier(data.get("identifier"))
+    dob = data.get("birthDate")
+    relation_name, relation_type = get_relation(data.get("contact"))
     customer_data = {
         "fhir_id": fhir_id,
         "customer_name": customer_name,
@@ -36,6 +41,10 @@ def create_fhir_customer():
         "gender": gender,
         "primary_address": primary_address,
         "from_ignite": 1,
+        "dob": dob,
+        "age": get_age(dob),
+        "relation_name":relation_name,
+        "relation_type": relation_type,
         **({"mrd_no": primary_identifier} if primary_identifier != None else {}),
     }
     contact_data = {
@@ -75,7 +84,13 @@ def get_human_name(human_names):
             return name
     return name
 
-
+def get_age(dob):
+  age_str = ""
+  if dob:
+    born = getdate(dob)
+    age = relativedelta(getdate(), born)
+    age_str = str(age.years) + " year(s) " + str(age.months) + " month(s) " + str(age.days) + " day(s)"
+  return age_str
 def get_telecom(telecoms):
     phone, email = [], []
     if not telecoms or not isinstance(telecoms, list):
@@ -89,6 +104,17 @@ def get_telecom(telecoms):
         if system in patterns and value and re.match(patterns[system][0], str(value)):
          patterns[system][1].append(value)
     return patterns["phone"][1], patterns["email"][1]
+
+def get_relation(relations):
+    relation_name, relation_type = "", ""
+    relation_name = relations[0]["text"] if relations and isinstance(relations[0], dict) and "text" in relations[0] else None
+    relation_type = (
+        relations[0]["coding"][0]["code"]
+        if relations and isinstance(relations[0], dict) and "coding" in relations[0] and isinstance(relations[0]["coding"], list) and relations[0]["coding"]
+        else None
+    )
+    return relation_name, relation_type
+    
 
 
 def get_primary_identifier(identifiers):

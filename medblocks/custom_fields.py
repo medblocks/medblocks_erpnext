@@ -10,15 +10,7 @@ CUSTOMER_CUSTOM_FIELD_LIST = [
                 "fieldtype": "Data",
                 "hidden": 1,
                 "label": "Fhir Id",
-            },
-            {
-                "fieldname": "mrd_no",
-                "label": "MRD No",
-                "fieldtype": "Data",
-                "in_list_view": 1,
-                "allow_in_quick_entry": 1,
-                "in_standard_filter": 1,
-                "in_global_search": 1,
+                "insert_after": "medblocks_section_break"
             },
             {
                 "fieldname": "from_ignite",
@@ -27,13 +19,53 @@ CUSTOMER_CUSTOM_FIELD_LIST = [
                 "depends_on": "eval:doc.fhir_id!=null",
                 "read_only": 1,
                 "default": "0",
+                "insert_after": "fhir_id"
             },
+            {
+                "fieldname": "mrd_no",
+                "label": "UHID No",
+                "fieldtype": "Data",
+                "in_list_view": 1,
+                "allow_in_quick_entry": 1,
+                "in_standard_filter": 1,
+                "in_global_search": 1,
+                "insert_after": "from_ignite"
+            },
+            {
+                "fieldname": "dob",
+                "label": "DOB",
+                "fieldtype": "Date",
+                "insert_after": "mrd_no"
+            },  
+            {
+                "fieldname": "age",
+                "label": "Age",
+                "fieldtype": "Data",
+                "read_only": 1,
+                "insert_after": "dob",
+            },
+            { "fieldname": "medblocks_column_break_1",
+                "fieldtype": "Column Break",
+                "insert_after": "age",
+            },
+            {
+                "fieldname": "relation_type",
+                "label": "Relation Type",
+                "fieldtype": "Data",
+                "insert_after": "medblocks_column_break_1",
+            },
+            {
+                "fieldname": "relation_name",
+                "label": "Relation Name",
+                "fieldtype": "Data",
+                "insert_after": "relation_type",
+            }
 ]
 CONTACT_CUSTOM_FIELD_LIST = [
     medblocks_section_break,
     {
                 "fieldname": "mrd_no",
-                "label": "MRD No",
+                "label": "UHID No",
                 "fieldtype": "Data",
                 "in_list_view": 1,
                 "in_standard_filter": 1,
@@ -70,7 +102,7 @@ SALES_INVOICE_CUSTOM_FIELD_LIST = [
         "in_global_search": 1,
         "in_list_view": 1,
         "in_standard_filter": 1,
-        "label": "MRD No",
+        "label": "UHID No",
         "depends_on": "customer",
         "insert_after": "customer_name",
     }
@@ -83,7 +115,7 @@ PAYMENT_ENTRY_CUSTOM_FIELD_LIST = [
         "in_global_search": 1,
         "in_list_view": 1,
         "in_standard_filter": 1,
-        "label": "MRD No",
+        "label": "UHID No",
         "depends_on": "eval:doc.party_type=='Customer' && doc.party",
         "insert_after": "party_name",
     }
@@ -96,7 +128,7 @@ PAYMENT_REQUEST_CUSTOM_FIELD_LIST = [
         "in_global_search": 1,
         "in_list_view": 1,
         "in_standard_filter": 1,
-        "label": "MRD No",
+        "label": "UHID No",
         "depends_on": "eval:doc.party_type=='Customer' && doc.party",
         "insert_after": "party_name",
     }
@@ -105,7 +137,7 @@ PAYMENT_REQUEST_CUSTOM_FIELD_LIST = [
 OPPORTUNITY_CUSTOM_FIELD_LIST = [
             {
                 "fieldname": "mrd_no",
-                "label": "MRD No",
+                "label": "UHID No",
                 "fieldtype": "Data",
                 "depends_on": "eval:doc.opportunity_from=='Customer' && doc.party_name",
         "insert_after": "party_name",
@@ -158,7 +190,7 @@ OPPORTUNITY_CUSTOM_FIELD_LIST = [
                 "fieldname": "patient_education",
                 "label": "Patient Education",
                 "fieldtype": "Data",
-                 "insert_after": "tpa_status",
+                 "insert_after": "payor",
             },
             {
                 "fieldname": "surgery_type",
