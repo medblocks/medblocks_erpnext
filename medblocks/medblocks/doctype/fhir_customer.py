@@ -105,7 +105,8 @@ def get_telecom(telecoms):
          patterns[system][1].append(value)
     return patterns["phone"][1], patterns["email"][1]
 
-def get_relation(relations):
+def get_relation(contacts):
+    relations = contacts[0]["relationship"] if contacts and isinstance(contacts[0], dict) and "relationship" in contacts[0] else None
     relation_name, relation_type = "", ""
     relation_name = relations[0]["text"] if relations and isinstance(relations[0], dict) and "text" in relations[0] else None
     relation_type = (
