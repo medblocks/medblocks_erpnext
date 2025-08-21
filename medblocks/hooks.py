@@ -14,6 +14,7 @@ required_apps = ["healthcare"]
 # include js, css files in header of web template
 # web_include_css = "/assets/medblocks/css/medblocks.css"
 # web_include_js = "/assets/medblocks/js/medblocks.js"
+app_include_js = "aarthy.bundle.js"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "medblocks/public/scss/website"
@@ -113,6 +114,7 @@ before_install = "medblocks.setup.setup_Medblocks"
 # }
 override_doctype_class = {
 	"Sales Invoice": "medblocks.medblocks.custom_doctype.sales_invoice.MedblocksSalesInvoice",
+	"Item": "medblocks.medblocks.thirvusoft_customisations.utils.python.item.TSItem"
 }
 
 # Document Events
@@ -127,6 +129,12 @@ doc_events = {
    "Payment Entry": {
 		"on_submit": "medblocks.medblocks.utils.manage_payment_submit_cancel",
 		"on_cancel": "medblocks.medblocks.utils.manage_payment_submit_cancel",
+	},
+	"Item": {
+		"before_insert":"medblocks.medblocks.thirvusoft_customisations.utils.python.item.item_auto_series",
+	},
+	"Item Group": {
+		"on_update":"medblocks.medblocks.thirvusoft_customisations.utils.python.item.validate_abbrivation",  
 	}
 }
 # doc_events = {
