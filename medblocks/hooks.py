@@ -125,6 +125,7 @@ doc_events = {
    "Sales Invoice": {
 		"on_submit": "medblocks.medblocks.utils.manage_invoice_submit_cancel",
 		"on_cancel": "medblocks.medblocks.utils.manage_invoice_submit_cancel",
+		"validate":"medblocks.medblocks.thirvusoft_customisations.utils.python.sales_invoice.check_batch_expiry_date"
 	},
    "Payment Entry": {
 		"on_submit": "medblocks.medblocks.utils.manage_payment_submit_cancel",
