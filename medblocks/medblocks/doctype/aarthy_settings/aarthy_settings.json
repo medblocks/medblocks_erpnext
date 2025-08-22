@@ -10,7 +10,7 @@
  "fields": [
   {
    "fieldname": "expiry_days",
-   "fieldtype": "Data",
+   "fieldtype": "Int",
    "label": "Notify Before Expiry (Days)"
   }
  ],
@@ -18,7 +18,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-08-22 09:57:54.533165",
+ "modified": "2025-08-22 10:16:49.110215",
  "modified_by": "Administrator",
  "module": "Medblocks",
  "name": "Aarthy Settings",
