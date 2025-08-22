@@ -71,7 +71,6 @@ def check_batch_expiry_date(doc,method):
             frappe.throw(title = "Restricted Batch",msg = mes) 
 
         elif len(expiry_month) > 1:
-            formatted = [f"{item} {batch}" for item, batch in expiry_month]
             mes = " "
             for item,batch,row in expiry_month:
                 mes += f"In Row {row}: Item:<b>{item}</b>-Batch:<b>{batch}</b> is expired and  Please select a valid batch.<br><br>"
@@ -85,7 +84,6 @@ def check_batch_expiry_date(doc,method):
             frappe.msgprint(title = "Warning",msg = mes)
 
         elif len(expiry_within_days) > 1:
-            formatted = [f"{item} {batch} {date}" for item, batch,date  in expiry_within_days] 
             mes = " "
 
             for item, batch, date,row in expiry_within_days:
